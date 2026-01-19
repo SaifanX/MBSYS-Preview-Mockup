@@ -114,6 +114,17 @@
         width: 300vmax;
         height: 300vmax;
       }
+
+      /* Timeline Scroll Animations */
+      .timeline-item-hidden {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .timeline-item-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
     </style>
   <script type="importmap">
 {

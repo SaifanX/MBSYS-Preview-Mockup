@@ -4,19 +4,23 @@ import XRaySlider from './components/XRaySlider';
 import Counter from './components/Counter';
 import { 
   Server, Shield, Wifi, Home, PenTool, Radio, 
-  MapPin, Mail, ArrowRight, Zap, CheckCircle 
+  MapPin, Mail, ArrowRight, Zap, CheckCircle, Loader2
 } from 'lucide-react';
 import { Service, TimelineItem } from './types';
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   
   // Parallax and Mouse Tracking
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [ripple, setRipple] = useState({ active: false, x: 0, y: 0, color: '' });
   const heroRef = useRef<HTMLElement>(null);
+  
+  // Timeline Animation State
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -28,6 +32,27 @@ function App() {
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Intersection Observer for Timeline staggered animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            setVisibleItems((prev) => new Set([...prev, index]));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const items = timelineRef.current?.querySelectorAll('.timeline-item-trigger');
+    items?.forEach((item) => observer.observe(item));
+
+    return () => observer.disconnect();
   }, []);
 
   const handleToggleTheme = (e: React.MouseEvent) => {
@@ -63,14 +88,27 @@ function App() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
-    setTimeout(() => {
+    
+    try {
+      // Simulated Asynchronous Protocol Transmission
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate 5% failure rate for robustness
+          if (Math.random() > 0.95) reject(new Error("Link error"));
+          else resolve(true);
+        }, 1800);
+      });
+      
       setFormStatus('success');
       setFormData({ name: '', email: '', company: '', message: '' });
-      setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+      setTimeout(() => setFormStatus('idle'), 4000);
+    } catch (err) {
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 4000);
+    }
   };
 
   const services: Service[] = [
@@ -304,7 +342,7 @@ function App() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section - Staggered Scroll Animations Added */}
       <section id="about" className="py-32 relative bg-background-light dark:bg-background-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-24">
@@ -312,12 +350,16 @@ function App() {
             <h2 className="text-4xl md:text-6xl font-display font-bold text-slate-900 dark:text-white">Connecting The Decades</h2>
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={timelineRef}>
             <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-primary via-secondary to-transparent hidden md:block"></div>
             
             <div className="space-y-20">
               {timeline.map((item, index) => (
-                <div key={index} className={`flex flex-col md:flex-row items-center justify-between group ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                <div 
+                  key={index} 
+                  data-index={index}
+                  className={`timeline-item-trigger flex flex-col md:flex-row items-center justify-between group transition-all duration-700 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''} ${visibleItems.has(index) ? 'timeline-item-visible' : 'timeline-item-hidden'}`}
+                >
                   <div className="w-full md:w-5/12 mb-10 md:mb-0">
                     <div className={`p-10 rounded-sm border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark hover:border-primary transition-all duration-500 shadow-xl ${index % 2 === 0 ? 'md:text-right md:border-r-4 md:border-r-primary' : 'md:text-left md:border-l-4 md:border-l-secondary'}`}>
                       <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">{item.title}</h3>
@@ -325,7 +367,7 @@ function App() {
                     </div>
                   </div>
                   
-                  <div className="relative z-10 flex items-center justify-center w-20 h-20 rounded-full bg-surface-light dark:bg-surface-dark border-4 border-slate-200 dark:border-slate-700 group-hover:border-primary group-hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] transition-all duration-500">
+                  <div className={`relative z-10 flex items-center justify-center w-20 h-20 rounded-full bg-surface-light dark:bg-surface-dark border-4 border-slate-200 dark:border-slate-700 group-hover:border-primary group-hover:shadow-[0_0_30px_rgba(239,68,68,0.6)] transition-all duration-500`}>
                     <span className="font-tech font-bold text-lg text-secondary">{item.year}</span>
                   </div>
                   
@@ -337,7 +379,7 @@ function App() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section - Async logic and visual feedback enhanced */}
       <section id="contact" className="py-32 bg-slate-50 dark:bg-[#050b14] relative border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
@@ -428,14 +470,26 @@ function App() {
                    <button 
                      type="submit" 
                      disabled={formStatus === 'submitting'}
-                     className={`w-full py-5 font-black uppercase tracking-[0.3em] text-xs transition-all duration-500 shadow-xl ${
+                     className={`w-full py-5 font-black uppercase tracking-[0.3em] text-xs transition-all duration-500 shadow-xl flex items-center justify-center gap-2 ${
                        formStatus === 'success' 
                          ? 'bg-green-600 text-white' 
+                         : formStatus === 'error'
+                         ? 'bg-orange-600 text-white'
                          : 'bg-primary text-white hover:bg-red-600 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]'
                      }`}
                    >
-                     {formStatus === 'submitting' ? 'UPLOADING...' : formStatus === 'success' ? 'SYNC SUCCESSFUL' : 'INITIALIZE TRANSFER'}
+                     {formStatus === 'submitting' && <Loader2 className="w-4 h-4 animate-spin" />}
+                     {formStatus === 'submitting' ? 'UPLOADING...' : 
+                      formStatus === 'success' ? 'SYNC SUCCESSFUL' : 
+                      formStatus === 'error' ? 'PROTOCOL ERROR' : 'INITIALIZE TRANSFER'}
                    </button>
+                   
+                   {formStatus === 'success' && (
+                     <p className="text-center text-green-500 text-[10px] font-bold tracking-widest animate-pulse">CHANNEL ESTABLISHED: EXPECT COMMS WITHIN 24H</p>
+                   )}
+                   {formStatus === 'error' && (
+                     <p className="text-center text-orange-500 text-[10px] font-bold tracking-widest animate-pulse">HANDSHAKE FAILED: RETRY TRANSMISSION</p>
+                   )}
                  </form>
                </div>
             </div>
@@ -443,22 +497,29 @@ function App() {
         </div>
       </section>
 
-      {/* Map Section */}
+      {/* Map Section - Integrated with real Google Maps Embed */}
       <section className="h-[500px] w-full relative bg-slate-900 overflow-hidden group">
-        <img 
-          alt="Map Location" 
-          className="w-full h-full object-cover opacity-40 dark:opacity-20 filter grayscale contrast-150 brightness-75 dark:invert" 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZiGxp_FU_SnDKD7neFN5hkS44l3rnkbnaQErSVfASdQaLixpq1p3yZ4n8bvmn8Fw_wUHpvYEOnvj9lxzBh_ANQnXoTLYbtU9PJrLsCgRvM3-4XxJ_fdulQPZ6OGSoq3VMnryDZvSyLsnmgRVQKJU4Hc51v_5x1F69KMcDUPzSYOOOvzC3dXdQW0IPDTeygxo55zTd80VlYh4dPh-UpRrRrFFtP8DzeloToiPhzEv8Srr2IwcTnfpgGlqKFLit9Np9u4RK4EUmyLZR"
-        />
+        <iframe
+          title="MBSYS Office Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.891104332912!2d77.5912343!3d12.9146543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae150819000001%3A0x7d0a3d3c8c6a0c0e!2sJP%20Nagar%20Metro%20Station!5e0!3m2!1sen!2sin!4v1700000000000"
+          className="w-full h-full border-0 opacity-60 dark:opacity-30 grayscale contrast-125 dark:invert brightness-90 transition-opacity duration-700 group-hover:opacity-100 dark:group-hover:opacity-50"
+          allowFullScreen
+          loading="lazy"
+        ></iframe>
+        
+        {/* Overlay Gradients for UI Integration */}
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-slate-900 via-transparent to-slate-900 opacity-60"></div>
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-slate-900 via-transparent to-slate-900 opacity-40"></div>
+        
         <div className="absolute inset-0 interactive-grid pointer-events-none opacity-20"></div>
         
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-          <div className="relative group">
-            <div className="absolute -inset-4 bg-primary/20 rounded-full blur-xl group-hover:bg-primary/40 transition-all duration-500"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center pointer-events-none">
+          <div className="relative group/pin">
+            <div className="absolute -inset-6 bg-primary/30 rounded-full blur-2xl animate-pulse"></div>
             <MapPin className="text-primary w-16 h-16 animate-bounce relative z-10 drop-shadow-[0_0_20px_rgba(239,68,68,1)]" />
           </div>
-          <div className="mt-8 bg-slate-900/90 backdrop-blur-xl border border-secondary/50 text-secondary px-6 py-3 text-[10px] font-black font-mono rounded-full shadow-2xl tracking-[0.2em]">
-             BEACON_LOC: 12.9141, 77.6101
+          <div className="mt-8 bg-slate-900/90 backdrop-blur-xl border border-secondary/50 text-secondary px-8 py-4 text-[11px] font-black font-mono rounded-full shadow-2xl tracking-[0.3em] uppercase">
+             TARGET_LOC: JP NAGAR, BENGALURU
           </div>
         </div>
       </section>
