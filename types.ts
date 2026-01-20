@@ -4,8 +4,18 @@ export interface Service {
   id: string;
   title: string;
   description: string;
+  longDescription: string;
+  features: string[];
   icon: LucideIcon;
   image: string;
+}
+
+export interface Testimonial {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  company: string;
 }
 
 export interface Stat {
