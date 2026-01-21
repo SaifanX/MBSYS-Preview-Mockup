@@ -8,12 +8,14 @@ interface Point {
   size: number;
 }
 
-const CursorTrail: React.FC = () => {
+interface CursorTrailProps {
+  darkMode: boolean;
+}
+
+const CursorTrail: React.FC<CursorTrailProps> = ({ darkMode }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
-
-  const colors = ['#EF4444', '#06B6D4']; // Primary and Secondary
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,6 +23,11 @@ const CursorTrail: React.FC = () => {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // Adjust colors based on theme
+    const colors = darkMode 
+      ? ['#EF4444', '#06B6D4'] // Neon Red, Cyan for Dark Mode
+      : ['#DC2626', '#0891B2']; // Darker Red, Darker Cyan for Light Mode
 
     const handleResize = () => {
       canvas.width = window.innerWidth;
@@ -80,13 +87,13 @@ const CursorTrail: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [darkMode]); // Re-run effect when theme changes to update colors
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-[9999]"
-      style={{ mixBlendMode: 'screen' }}
+      style={{ mixBlendMode: darkMode ? 'screen' : 'normal' }}
     />
   );
 };

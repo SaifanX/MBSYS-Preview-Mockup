@@ -9,20 +9,26 @@ interface TestimonialCarouselProps {
 const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const TRANSITION_DURATION = 600;
 
-  const next = useCallback(() => {
+  const changeSlide = useCallback((direction: 'next' | 'prev') => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    setTimeout(() => setIsAnimating(false), 500);
+
+    setTimeout(() => {
+      setCurrentIndex((prev) => {
+        if (direction === 'next') {
+          return (prev + 1) % testimonials.length;
+        } else {
+          return (prev - 1 + testimonials.length) % testimonials.length;
+        }
+      });
+      setIsAnimating(false);
+    }, TRANSITION_DURATION);
   }, [isAnimating, testimonials.length]);
 
-  const prev = useCallback(() => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  }, [isAnimating, testimonials.length]);
+  const next = useCallback(() => changeSlide('next'), [changeSlide]);
+  const prev = useCallback(() => changeSlide('prev'), [changeSlide]);
 
   useEffect(() => {
     const interval = setInterval(next, 8000);
@@ -33,7 +39,13 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
 
   return (
     <div className="relative group max-w-4xl mx-auto">
-      <div className={`transition-all duration-700 transform ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+      <div 
+        className={`transition-all duration-[600ms] ease-in-out transform ${
+          isAnimating 
+            ? 'opacity-0 translate-y-8 scale-95 blur-sm' 
+            : 'opacity-100 translate-y-0 scale-100 blur-0'
+        }`}
+      >
         <div className="relative p-12 lg:p-16 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-800 rounded-sm shadow-[0_40px_80px_rgba(0,0,0,0.1)] overflow-hidden">
           <Quote className="absolute top-8 right-8 w-24 h-24 text-slate-100 dark:text-slate-800/20" />
           
@@ -61,13 +73,15 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
       <div className="flex justify-center mt-12 gap-4">
         <button 
           onClick={prev}
-          className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white hover:border-secondary transition-all"
+          disabled={isAnimating}
+          className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white hover:border-secondary transition-all disabled:opacity-50 hover:scale-105 active:scale-95"
         >
           <ChevronLeft size={24} />
         </button>
         <button 
           onClick={next}
-          className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white hover:border-secondary transition-all"
+          disabled={isAnimating}
+          className="p-4 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-white hover:border-secondary transition-all disabled:opacity-50 hover:scale-105 active:scale-95"
         >
           <ChevronRight size={24} />
         </button>
@@ -78,8 +92,15 @@ const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ testimonials 
         {testimonials.map((_, idx) => (
           <button
             key={idx}
-            onClick={() => setCurrentIndex(idx)}
-            className={`h-1.5 rounded-full transition-all duration-500 ${currentIndex === idx ? 'w-12 bg-primary' : 'w-4 bg-slate-300 dark:bg-slate-700'}`}
+            onClick={() => {
+              if (idx === currentIndex || isAnimating) return;
+              setIsAnimating(true);
+              setTimeout(() => {
+                setCurrentIndex(idx);
+                setIsAnimating(false);
+              }, TRANSITION_DURATION);
+            }}
+            className={`h-1.5 rounded-full transition-all duration-500 ${currentIndex === idx ? 'w-12 bg-primary' : 'w-4 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'}`}
           />
         ))}
       </div>

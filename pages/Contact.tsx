@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Mail, Loader2, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { MapPin, Mail, Loader2, Lock, AlertCircle, CheckCircle2, Star, ExternalLink } from 'lucide-react';
+import MbsysLogo from '../components/MbsysLogo';
 
 interface ContactProps {
   onNavigate: (path: string) => void;
@@ -175,13 +176,33 @@ const Contact: React.FC<ContactProps> = ({ onNavigate }) => {
           </form>
         </div>
         
-        <div className="h-[400px] w-full rounded-sm overflow-hidden border border-slate-200 dark:border-slate-800 grayscale invert opacity-50 hover:opacity-100 transition-opacity mb-20">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.891104332912!2d77.5912343!3d12.9146543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae150819000001%3A0x7d0a3d3c8c6a0c0e!2sJP%20Nagar%20Metro%20Station!5e0!3m2!1sen!2sin!4v1700000000000"
-            className="w-full h-full border-0"
-            allowFullScreen loading="lazy"
-            title="Google Maps Location"
-          ></iframe>
+        {/* Replaced Map with Network Sentiment */}
+        <div className="mb-20 p-8 lg:p-12 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-sm shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex items-center gap-8 md:gap-10">
+               <div className="w-20 h-20 md:w-24 md:h-24 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center shadow-lg border border-slate-200 dark:border-slate-700 p-4 transition-all hover:rotate-6 hover:scale-105">
+                  <MbsysLogo className="w-full h-auto" />
+               </div>
+               <div className="space-y-2">
+                  <h3 className="text-2xl md:text-3xl font-display font-bold text-slate-900 dark:text-white tracking-tight">Network Sentiment</h3>
+                  <div className="flex items-center gap-2">
+                     <div className="flex items-center gap-0.5">
+                        {[1,2,3,4,5].map(i => <Star key={i} size={18} fill="#FACC15" className="text-yellow-400" />)}
+                     </div>
+                     <span className="ml-2 font-tech text-sm md:text-base font-bold text-slate-600 dark:text-slate-400">5.0/5.0 Google Presence</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold opacity-80 font-tech">Synced with Global Ecosystem</p>
+               </div>
+            </div>
+            <a 
+              href="https://maps.app.goo.gl/7aEp8tyHSyCm8fUh6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full md:w-auto flex items-center justify-center gap-4 px-10 py-5 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-800 rounded-sm text-xs font-black uppercase tracking-[0.25em] hover:border-secondary hover:text-secondary transition-all group shadow-xl hover:-translate-y-1 font-tech"
+            >
+              Find us on Google Maps <ExternalLink size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </a>
+          </div>
         </div>
       </div>
     </div>

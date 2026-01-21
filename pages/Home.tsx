@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ArrowRight, Zap, CheckCircle, Shield, Server, Wifi, Quote, Activity, Globe, Star, ExternalLink, Cpu, Terminal } from 'lucide-react';
+import { ArrowRight, Zap, CheckCircle, Shield, Server, Wifi, Quote, Activity, Globe, Star, ExternalLink } from 'lucide-react';
 import Counter from '../components/Counter';
 import XRaySlider from '../components/XRaySlider';
 import MbsysLogo from '../components/MbsysLogo';
@@ -154,7 +154,7 @@ const Home: React.FC<HomeProps> = ({ services, onNavigate }) => {
       </section>
 
       {/* Trust Protocol (Review Embedding) */}
-      <section className="py-24 bg-slate-100 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800/80">
+      <section className="py-16 bg-slate-100 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="flex items-center gap-10">
@@ -185,10 +185,10 @@ const Home: React.FC<HomeProps> = ({ services, onNavigate }) => {
       </section>
 
       {/* Testimonials Carousel Section */}
-      <section className="py-40 bg-background-light dark:bg-background-dark overflow-hidden">
+      <section className="py-24 bg-background-light dark:bg-background-dark overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-24">
-            <span className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-4 block font-tech">Stakeholder Transmissions</span>
+          <div className="text-center mb-16">
+            <span className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-4 block font-tech">Client Endorsements</span>
             <h2 className="text-5xl md:text-7xl font-display font-bold text-slate-900 dark:text-white">Validation Protocol</h2>
           </div>
 
@@ -231,54 +231,6 @@ const Home: React.FC<HomeProps> = ({ services, onNavigate }) => {
               imageBefore="https://lh3.googleusercontent.com/aida-public/AB6AXuAaCS6QAEFXR8oMkrxKqgSagkYINwmXT8HZymGlz7-jnqb-LTTYhVgRqc3XLw9hYyZQtcSth9NQlbDdpR0MnL_I9nIv6gI9VmsUkbbS00jliNwa_i2dUnpt5M5H_r3Pn6ZaXrfGJjcSr28qlJVbpcpLP9ZxocER5gF4xZtw55EdUVIq0QaC4Dsfc3T_DHUwMYC7ObfUA1CLFncRxgtIvvHvPUm8df6xZjkHzd0CcQFVZdG5Xj6eyWIGovBUEr_TPj14q7wa8DpY0h8e"
               imageAfter="https://lh3.googleusercontent.com/aida-public/AB6AXuBmRTBh8JzHa8ksbtStBCAImHMnt6QWptJC2oGa0OtfyVkf5WxBhCATka8THF1zwfbjAJK3tV1eQ7r52M4cILKqZu9vdVPIIJaop4K8VcyV3doN9FJn4cyfZA7hbAm2IaoiLu5Tit2-JbvdoxTsB8OKtudHXcIgC6loZnDM7-UIxwyBIDwxhucssiwFUEC20VdWrcPzi80bPEGJjJLopVHREDFT5784kENNeXF5KjgMOldl8XZWZgFkNcgQJpIAtGt7qDTgo5prr0b3"
            />
-        </div>
-      </section>
-
-      {/* AI Assistant Section */}
-      <section className="py-32 bg-slate-900 border-t border-slate-800 overflow-hidden relative">
-        <div className="absolute inset-0 opacity-10">
-           <div className="absolute top-0 left-0 w-full h-full tech-grid"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-           <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-3xl p-12 md:p-20 flex flex-col md:flex-row gap-16 items-center">
-              <div className="w-full md:w-1/2 space-y-8">
-                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary text-[10px] font-tech uppercase tracking-widest">
-                    <Cpu size={14} /> Neural Interface Active
-                 </div>
-                 <h2 className="text-4xl md:text-6xl font-display font-bold text-white leading-tight">Next-Gen Architecture Intelligence</h2>
-                 <p className="text-slate-400 font-sans text-lg leading-relaxed">Experience our proprietary AI-driven consultancy grid. We don't just solve problems; we predict and prevent them before they manifest in your physical infrastructure.</p>
-                 <ul className="space-y-4 font-tech text-slate-300 uppercase text-xs tracking-[0.15em]">
-                    <li className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-secondary"></span> Predictive Latency Analysis</li>
-                    <li className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-primary"></span> Automated Threat Mitigation</li>
-                    <li className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-green-500"></span> Efficiency Optimization Logic</li>
-                 </ul>
-              </div>
-              <div className="w-full md:w-1/2 relative group">
-                 <div className="absolute -inset-1 bg-gradient-to-r from-secondary to-primary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                 <div className="relative bg-slate-900 p-8 rounded-2xl border border-slate-700 flex flex-col gap-6">
-                    <div className="flex items-center gap-4 border-b border-slate-800 pb-6">
-                       <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
-                          <Terminal className="text-secondary" />
-                       </div>
-                       <div>
-                          <p className="text-white font-tech font-bold text-lg uppercase tracking-wider">MBSYS Neural Assistant</p>
-                          <p className="text-secondary font-tech text-[10px] animate-pulse">SYSTEM ONLINE // LISTENING...</p>
-                       </div>
-                    </div>
-                    <div className="space-y-4 h-48 overflow-y-auto pr-2 custom-scrollbar text-sm font-mono text-slate-400">
-                       <p className="text-secondary">&gt; system.init_assistant()</p>
-                       <p className="text-slate-300">Ready for inquiry. How can I optimize your digital-physical infrastructure today?</p>
-                       <p className="animate-pulse">_</p>
-                    </div>
-                    <button 
-                      onClick={() => onNavigate('#contact')}
-                      className="w-full py-4 bg-slate-800 hover:bg-slate-700 text-white font-tech uppercase tracking-[0.2em] rounded-lg transition-all border border-slate-700 hover:border-secondary"
-                    >
-                       Establish Neural Link
-                    </button>
-                 </div>
-              </div>
-           </div>
         </div>
       </section>
     </div>

@@ -168,7 +168,7 @@ function App() {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-background-light dark:bg-background-dark transition-colors duration-500">
-      <CursorTrail />
+      <CursorTrail darkMode={darkMode} />
       
       <button 
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
